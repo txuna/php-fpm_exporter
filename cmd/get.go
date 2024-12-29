@@ -78,6 +78,7 @@ var getCmd = &cobra.Command{
 				table.AddRow("Max active processes:", pool.MaxActiveProcesses)
 				table.AddRow("Max children reached:", pool.MaxChildrenReached)
 				table.AddRow("Slow requests:", pool.SlowRequests)
+				table.AddRow("Memory peak:", pool.MemoryPeak)
 				table.AddRow("")
 			}
 

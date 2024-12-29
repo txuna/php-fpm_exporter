@@ -83,6 +83,7 @@ type Pool struct {
 	MaxActiveProcesses  int64         `json:"max active processes"`
 	MaxChildrenReached  int64         `json:"max children reached"`
 	SlowRequests        int64         `json:"slow requests"`
+	MemoryPeak          int64         `json:"memory peak"`
 	Processes           []PoolProcess `json:"processes"`
 }
 

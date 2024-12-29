@@ -50,6 +50,7 @@ type Exporter struct {
 	processLastRequestCPU    *prometheus.Desc
 	processRequestDuration   *prometheus.Desc
 	processState             *prometheus.Desc
+	memoryPeak               *prometheus.Desc
 }
 
 // NewExporter creates a new Exporter for a PoolManager and configures the necessary metrics.
@@ -166,6 +167,12 @@ func NewExporter(pm PoolManager) *Exporter {
 			"The state of the process (Idle, Running, ...).",
 			[]string{"pool", "child", "state", "scrape_uri"},
 			nil),
+
+		memoryPeak: prometheus.NewDesc(
+			prometheus.BuildFQName(namespace, "", "memory_peak"),
+			"memory peak one of the processes",
+			[]string{"pool", "scrape_uri"},
+			nil),
 	}
 }
 
@@ -210,6 +217,7 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 		ch <- prometheus.MustNewConstMetric(e.maxActiveProcesses, prometheus.CounterValue, float64(pool.MaxActiveProcesses), pool.Name, pool.Address)
 		ch <- prometheus.MustNewConstMetric(e.maxChildrenReached, prometheus.CounterValue, float64(pool.MaxChildrenReached), pool.Name, pool.Address)
 		ch <- prometheus.MustNewConstMetric(e.slowRequests, prometheus.CounterValue, float64(pool.SlowRequests), pool.Name, pool.Address)
+		ch <- prometheus.MustNewConstMetric(e.memoryPeak, prometheus.CounterValue, float64(pool.MemoryPeak), pool.Name, pool.Address)
 
 		for childNumber, process := range pool.Processes {
 			childName := fmt.Sprintf("%d", childNumber)
@@ -254,4 +262,5 @@ func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	ch <- e.processLastRequestMemory
 	ch <- e.processLastRequestCPU
 	ch <- e.processRequestDuration
+	ch <- e.memoryPeak
 }
