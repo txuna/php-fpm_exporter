@@ -9,5 +9,5 @@ RUN cp php-fpm_exporter /bin/php-fpm_exporter
 
 FROM alpine
 COPY --from=builder /bin/php-fpm_exporter /bin/php-fpm_exporter
-EXPOSE     9253
+EXPOSE     9090
 ENTRYPOINT [ "/bin/php-fpm_exporter", "server" ]
